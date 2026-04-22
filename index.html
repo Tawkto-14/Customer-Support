@@ -1,1 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Help Center – Kim Flora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F7F5F2; --card: #ffffff; --ink: #1a1a1a; --muted: #6b6b6b;
+      --border: #e2ddd8; --accent: #2563EB; --accent-dark: #1d4ed8;
+      --accent-light: #eff6ff; --green: #16a34a; --red: #dc2626;
+    }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .wrapper { width: 100%; max-width: 440px; }
 
+    /* BRAND */
+    .brand { text-align: center; margin-bottom: 2rem; animation: fadeUp 0.5s ease both; }
+    .brand-icon {
+      width: 54px; height: 54px; background: var(--accent); border-radius: 15px;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 0.75rem; box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+    }
+    .brand h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 600; color: var(--ink); }
+    .brand p { font-size: 0.875rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* CARD */
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 22px;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 16px 48px rgba(0,0,0,0.08);
+      animation: fadeUp 0.5s ease 0.1s both;
+    }
+    .step { display: none; }
+    .step.active { display: block; animation: fadeUp 0.35s ease both; }
+
+    /* STEP DOTS */
+    .steps-indicator { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.75rem; }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: all 0.3s; }
+    .step-dot.active { background: var(--accent); transform: scale(1.3); }
+    .step-dot.done { background: var(--green); }
+    .step-label { font-size: 0.78rem; font-weight: 500; color: var(--muted); margin-left: 0.25rem; }
+
+    .card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; }
+    .card-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.55; }
+
+    /* FIELDS */
+    .field { margin-bottom: 1.1rem; }
+    label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
+    label .req { color: var(--red); margin-left: 2px; }
+    input[type="text"], input[type="email"] {
+      width: 100%; font-family: 'Outfit', sans-serif; font-size: 0.95rem;
+      color: var(--ink); background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 0.72rem 0.95rem; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); background: #fff; }
+    input.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+    .error-msg { font-size: 0.78rem; color: var(--red); margin-top: 0.3rem; display: none; }
+    .error-msg.show { display: block; }
+
+    /* BUTTON */
+    .btn {
+      width: 100%; background: var(--accent); color: #fff; font-family: 'Outfit', sans-serif;
+      font-size: 0.97rem; font-weight: 600; border: none; border-radius: 10px;
+      padding: 0.85rem; cursor: pointer; margin-top: 0.5rem;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .btn:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,0.3); }
+    .btn.green { background: var(--green); }
+    .btn.green:hover { background: #15803d; box-shadow: 0 4px 16px rgba(22,163,74,0.3); }
+
+    /* STEP 2 — Welcome screen */
+    .avatar-row {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 0.5rem 0 1.75rem;
+    }
+    .avatar {
+      width: 72px; height: 72px; background: linear-gradient(135deg, #2563EB, #7c3aed);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin-bottom: 1rem;
+      box-shadow: 0 6px 20px rgba(37,99,235,0.25);
+    }
+    .welcome-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600; color: var(--ink); margin-bottom: 0.25rem;
+    }
+    .online-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.8rem; font-weight: 500; color: var(--green);
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      padding: 0.3rem 0.75rem; border-radius: 999px; margin-bottom: 1.25rem;
+    }
+    .online-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    .info-box {
+      background: var(--accent-light); border: 1px solid #bfdbfe;
+      border-radius: 12px; padding: 1rem 1.1rem;
+      font-size: 0.85rem; color: #1e40af; line-height: 1.55;
+      margin-bottom: 1.5rem;
+    }
+    .info-box strong { font-weight: 600; }
+
+    /* FOOTER */
+    .footer-note { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 1.25rem; animation: fadeUp 0.5s ease 0.2s both; }
+    .footer-note a { color: var(--accent); text-decoration: none; }
+
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(22,163,74,0.4); } 50% { box-shadow: 0 0 0 5px rgba(22,163,74,0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="brand">
+    <div class="brand-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+    <h1>Help Center</h1>
+    <p>We're here to help — just reach out.</p>
+  </div>
+
+  <div class="card">
+    <div class="steps-indicator">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <span class="step-label" id="step-label-text">Step 1 of 2</span>
+    </div>
+
+    <!-- STEP 1: Name & Email -->
+    <div class="step active" id="step1">
+      <div class="card-title">Before we begin</div>
+      <p class="card-sub">Enter your details so Kim Flora knows who she's speaking with.</p>
+
+      <div class="field">
+        <label for="username">Your Name <span class="req">*</span></label>
+        <input type="text" id="username" placeholder="e.g. Jane Smith" autocomplete="name"/>
+        <div class="error-msg" id="err-name">Please enter your name.</div>
+      </div>
+      <div class="field">
+        <label for="email">Email Address <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+        <div class="error-msg" id="err-email">Please enter a valid email address.</div>
+      </div>
+
+      <button class="btn" onclick="goToStep2()">
+        Continue
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- STEP 2: Welcome + direct chat link -->
+    <div class="step" id="step2">
+
+      <div class="avatar-row">
+        <div class="avatar">💬</div>
+        <div class="welcome-name">Hi, <span id="display-name"></span>!</div>
+        <div class="online-badge">
+          <span class="online-dot"></span>
+          Kim Flora is online
+        </div>
+      </div>
+
+      <div class="info-box">
+        You're all set! Click the button below to open the <strong>live chat</strong> with Kim Flora. Your name and email will be shared automatically so you don't have to re-enter anything. 🎉
+      </div>
+
+      <button class="btn green" onclick="openChat()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Start Live Chat with Kim Flora
+      </button>
+
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Powered by <a href="https://tawk.to" target="_blank">Tawk.to</a> · Messages go directly to Kim Flora
+  </div>
+</div>
+
+<script>
+  function goToStep2() {
+    const nameEl  = document.getElementById('username');
+    const emailEl = document.getElementById('email');
+    const errName = document.getElementById('err-name');
+    const errMail = document.getElementById('err-email');
+    let valid = true;
+
+    nameEl.classList.remove('error');  errName.classList.remove('show');
+    emailEl.classList.remove('error'); errMail.classList.remove('show');
+
+    if (!nameEl.value.trim()) {
+      nameEl.classList.add('error'); errName.classList.add('show'); valid = false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+      emailEl.classList.add('error'); errMail.classList.add('show'); valid = false;
+    }
+    if (!valid) return;
+
+    // Show first name only
+    const firstName = nameEl.value.trim().split(' ')[0];
+    document.getElementById('display-name').textContent = firstName;
+
+    // Transition to step 2
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+    document.getElementById('dot1').classList.remove('active');
+    document.getElementById('dot1').classList.add('done');
+    document.getElementById('dot2').classList.add('active');
+    document.getElementById('step-label-text').textContent = 'Step 2 of 2';
+  }
+
+  function openChat() {
+    const name  = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    // Pass name & email as URL params so Tawk.to pre-fills visitor info
+    const params = new URLSearchParams({ name: name, email: email });
+    const chatURL = 'https://tawk.to/chat/69e7a1d06e94cf1c3c34acde/default?' + params.toString();
+
+    window.open(chatURL, '_blank');
+  }
+</script>
+
+</body>
+</html>
